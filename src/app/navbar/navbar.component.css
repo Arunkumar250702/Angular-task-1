@@ -1,0 +1,40 @@
+.example-spacer {
+    flex: 1 1 auto;
+  }
+mat-toolbar{
+    background-color: rgb(176, 67, 248);
+}  
+
+.example-container {
+    height: 560px;
+    width: 100%;
+    /* width:fit-content; */
+  }
+  
+  .example-sidenav-content {
+    /* display: flex; */
+    height: 100%;
+    
+    /* align-items: left; */
+    justify-content: center;
+    /* background-color: red; */
+  }
+  
+  .example-sidenav {
+    padding: 20px;
+    background-color: rgb(176, 67, 248);
+    width:200px;
+    height: 567px;
+  }
+  .example-sidenav a{
+    text-decoration: none;
+  }
+  a{
+    color: white;;
+  }
+  a:hover{
+    color: rgb(215, 159, 252);
+  }
+   .log{
+    margin-top: 365px;
+  }

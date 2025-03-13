@@ -1,0 +1,120 @@
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+    <mat-label>Your Name</mat-label>
+    <input matInput placeholder="Ex. arun" [(ngModel)]="Name" name="name">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Description</mat-label>
+    <textarea matInput placeholder="Ex. Type your food name..." [(ngModel)]="Description" name="description"></textarea>
+  </mat-form-field>
+</form>
+
+<!-- <mat-label><h3>Description:</h3></mat-label>
+  <angular-editor [(ngModel)]="Description" name="description" ></angular-editor> -->
+
+
+<h2 class="example-h2">Food Routine:</h2>
+
+<section class="example-section">
+  <mat-checkbox [checked]="selectedFoodType === 'veg'" (change)="toggleFoodType('veg', $event)">
+    Veg
+  </mat-checkbox>
+  <mat-checkbox [checked]="selectedFoodType === 'nonveg'" (change)="toggleFoodType('nonveg', $event)">
+    Non-Veg
+  </mat-checkbox>
+  <mat-checkbox [checked]="selectedFoodType === 'cookies'" (change)="toggleFoodType('cookies', $event)">
+    Cookies
+  </mat-checkbox>
+</section>
+
+<!-- MEAL GRID -->
+<div class="meal-grid">
+  <div *ngFor="let meal of meals" class="meal-column">
+    <!-- Meal Title with Add Icon -->
+    <div class="meal-title">
+      <span>{{ meal }}</span>
+      <mat-icon class="add-icon" (click)="selectMeal(meal)">add</mat-icon>
+    </div>
+
+    <!-- slected images for the meal -->
+    <div class="meal-images">
+      <div *ngFor="let img of selectedMealImages[meal]" class="image-cell">
+        <img [src]="img.url" alt="Selected Meal Image" />
+        <!-- <mat-icon class="tick-icon" id="deb">check_circle</mat-icon> -->
+        <div class="meal-info">
+          <p class="meal-text">Serving Size</p>
+          <p class="meal-text">
+            <input type="number" min="1" [(ngModel)]="img.quantity" class="quantity-input" /> 
+            {{ img.unit_of_measurement }}
+          </p>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+
+<!-- IMAGE SELECTION DRAWER -->
+<mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side" position="end">
+    <h3>Selected Meal: {{ selectedMeal }}</h3>
+    <div class="image-grid">
+      <div *ngFor="let row of imageMatrix" class="image-row">
+        <div *ngFor="let item of row" class="image-cell" (click)="toggleImageSelection({
+        url: item.url, 
+        name: item.name, 
+        unit_of_measurement: item.unit_of_measurement || 'grams', 
+        quantity: item.quantity ?? 1
+      })">
+
+
+
+          <img [src]="item.url" [class.gray-filter]="!isImageSelected(item)" alt="{{ item.name }}" />
+          <p class="image-name">{{ item.name }}</p>
+          <mat-icon *ngIf="isImageSelected(item)" class="tick-icon">check_circle</mat-icon>
+        </div>
+      </div>     
+    </div>
+  </mat-drawer>
+</mat-drawer-container>
+
+<section>
+  <div class="example-button-row">
+    <button mat-flat-button color="primary" (click)="saveDietPlan()">Save</button>
+    <button mat-stroked-button color="warn" (click)="cancelDietPlan()">Cancel</button>
+  </div>
+</section>
+
+<!-- saved meals list -->
+<div *ngIf="showSavedMealsList" class="saved-meals">
+  <h3>Saved Meals</h3>
+  <table>
+    <tr>
+      <th>No</th>
+      <th>Image</th>
+      <th>Name</th>
+      <th>Meal Type</th>
+      <th>Action</th>
+    </tr>
+    <tr *ngFor="let meal of savedMealsList; let i = index">
+      <td>{{ meal.no }}</td>
+      <td><img [src]="meal.url" width="50" height="50" /></td>
+      <td>{{ meal.name }}</td>
+      <td>{{ meal.mealType }}</td>
+      <!-- <td><button mat-button (click)="removeSavedMeal(i)">Remove</button></td> -->
+       <td>
+        <!-- ------------- -->
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="editDietPlan(meal.id)"><mat-icon>edit</mat-icon>Edit</button>
+          <button mat-menu-item class="delete-button" (click)="removeSavedMeal(i)"><mat-icon>delete</mat-icon>Delete</button>
+        </mat-menu>
+       </td>
+    </tr>
+  </table>
+</div>
+

@@ -1,0 +1,50 @@
+<section>
+  <div class="button-row">
+    <button mat-stroked-button class="add-button" (click)="navigateToAddRecipe()"><mat-icon>add</mat-icon>ADD RECIPE</button>
+  </div>
+</section>
+
+<div class="table-container">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!-- number column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element"> {{ element.position }} </td>
+    </ng-container>
+
+    <!-- image column -->
+    <ng-container matColumnDef="image">
+      <th mat-header-cell *matHeaderCellDef> Image </th>
+      <td mat-cell *matCellDef="let element">
+        <img class="recipe-image" [src]="element.image" alt="{{ element.name }}" 
+             (error)="element.image='assets/default-image.png'">
+      </td>
+    </ng-container>
+
+    <!-- receipe name column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
+    </ng-container>
+
+    <!-- actions button -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> Action </th>
+      <td mat-cell *matCellDef="let element"> 
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="editRecipe(element.id)"><mat-icon>edit</mat-icon>Edit</button>
+          <button mat-menu-item class="delete-button" (click)="deleteRecipe(element.id)"><mat-icon>delete</mat-icon>Delete</button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+</div>

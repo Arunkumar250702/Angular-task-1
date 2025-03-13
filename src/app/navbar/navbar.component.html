@@ -1,0 +1,27 @@
+<mat-toolbar>
+  <button mat-icon-button class="example-icon" aria-label="Menu" (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Dashboard</span>
+  <span class="example-spacer"></span>
+  <button mat-icon-button class="example-icon" aria-label="Logout" (click)="navigatelogin()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-drawer-container class="example-container">
+  <mat-drawer #drawer class="example-sidenav" mode="side" [opened]="true"> 
+    <mat-list>
+      <mat-list-item><a routerLink="/receipe" (click)="navigatereceipe()" (click)="drawer.close()">Receipe</a></mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item><a routerLink="/diet-plan" (click)="navigatedietplan()" (click)="drawer.close()">Diet Plan</a></mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item class="log"><a routerLink="/logout" (click)="navigatelogin()" (click)="drawer.close()">Logout</a></mat-list-item>
+    </mat-list>
+  </mat-drawer>
+
+  <div class="example-sidenav-content">
+    <!-- <app-receipe></app-receipe> -->
+     <router-outlet></router-outlet>
+  </div>
+</mat-drawer-container>

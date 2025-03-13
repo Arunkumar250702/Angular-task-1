@@ -1,0 +1,71 @@
+<h2 class="header-container">
+  <button mat-icon-button (click)="navigateToRecipe()">
+    <mat-icon>keyboard_backspace</mat-icon>
+  </button>
+  Add-Receipe
+</h2>
+
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+    <mat-label>Recipe Name</mat-label>
+    <input matInput placeholder="Ex. Coffee" [(ngModel)]="recipeData.name" name="name">
+  </mat-form-field>
+
+  
+  <mat-label><h3>Description:</h3></mat-label>
+  <angular-editor [(ngModel)]="recipeData.description" name="editor" id="descrip"></angular-editor>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Unit</mat-label>
+    <input matInput placeholder="Ex. mm" [(ngModel)]="recipeData.unit_of_measurement" name="unit">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Calories</mat-label>
+    <input matInput placeholder="Ex. 100" [(ngModel)]="recipeData.calories" name="calories">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Frequency</mat-label>
+    <mat-select [(ngModel)]="recipeData.frequecy" name="frequency">
+      <mat-option value="1">Daily</mat-option>
+      <mat-option value="2">Weekly</mat-option>
+      <mat-option value="3">Monthly</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Food Type</mat-label>
+    <mat-select [(ngModel)]="recipeData.type" name="type">
+      <mat-option value="Vegetarian">Veg</mat-option>
+      <mat-option value="Non Vegetarian">Non Veg</mat-option>
+      <mat-option value="Cookies & deserts">Cookies & deserts</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Quantity</mat-label>
+    <input matInput placeholder="Ex. 1" [(ngModel)]="recipeData.quantity" name="quantity">
+  </mat-form-field>
+
+  <mat-label>Upload Image</mat-label>
+  <input type="file" (change)="onFileSelected($event)" accept="image/*">
+  
+  <section>
+    <div class="example-button-row">
+      <button mat-stroked-button (click)="uploadImage()">Upload</button>
+    </div>
+  </section>
+
+  <!-- preview image -->
+  <img *ngIf="previewImage" [src]="previewImage" id="previewImage" alt="Preview" width="100">
+
+  <section>
+    <div class="example-button-row">
+      <button mat-stroked-button (click)="saveRecipe()">
+        {{ isEditMode ? 'Update' : 'Save' }}
+      </button>
+      <button mat-stroked-button (click)="resetForm()">Cancel</button>
+    </div>
+  </section>
+</form>
