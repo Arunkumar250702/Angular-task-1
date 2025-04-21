@@ -6,8 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class RecipeService {
-  private baseUrl = 'https://api.teknologiunggul.com';
-  private recipeUrl = `${this.baseUrl}/entities/food_recipe`;
+  private baseUrl = 'http://localhost:5209';
+  private recipeUrl = `${this.baseUrl}/api/recipes/save`;
+  // private recipeUrlupdate = `http://localhost:5209/api/recipes/update`;
 
   constructor(private http: HttpClient) {}
 
@@ -27,14 +28,20 @@ export class RecipeService {
   }
 
   //Get  recipe id
+  // getRecipeById(recipeId: string): Observable<any> {
+  //   return this.http.get(`${this.recipeUrl}/${recipeId}`, this.getHeaders());
+  // }
   getRecipeById(recipeId: string): Observable<any> {
-    return this.http.get(`${this.recipeUrl}/${recipeId}`, this.getHeaders());
+    return this.http.get(`${this.baseUrl}/api/recipes/${recipeId}`, this.getHeaders());
   }
+  
+  
 
   // Update  recipe
   updateRecipe(recipeId: string, recipeData: any): Observable<any> {
-    return this.http.put(`${this.recipeUrl}/${recipeId}`, recipeData, this.getHeaders());
+    return this.http.put(`${this.baseUrl}/api/recipes/update/${recipeId}`, recipeData, this.getHeaders());
   }
+  
 
   // Upload image
   uploadImage(file: File): Observable<any> {
@@ -47,7 +54,7 @@ export class RecipeService {
     };
 
     return this.http.post<any>(
-      'https://api.teknologiunggul.com/file/intern/Food',formData,{ headers }
+      'http://localhost:5209/api/recipes/upload-image',formData,{ headers }
     );
   }
 }

@@ -27,9 +27,9 @@ export class LoginComponent {
      console.log(this.email,this.password)
     this.authService.login(this.email, this.password).subscribe(
       (response) => {
-        console.log('Login successful:', response);
+        console.log('Login successful:', response.token);
         // alert("CONGRATS YOU ARE SUCCESSFULLY LOGIN")
-        localStorage.setItem('authToken', response.data.LoginResponse.token);
+        localStorage.setItem('authToken', response.token);
         this.router.navigate(['/receipe']);  
       },
       (error) => {

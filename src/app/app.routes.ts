@@ -5,6 +5,7 @@ import { DietPlanComponent } from './diet-plan/diet-plan.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 import { AddReceipeComponent } from './add-receipe/add-receipe.component';
+import { DummyComponent } from './dummy/dummy.component';
 
 
 // export const routes: Routes = [
@@ -19,8 +20,8 @@ import { AddReceipeComponent } from './add-receipe/add-receipe.component';
 // ];
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent },
-  { path: 'login', component: LoginComponent },
+  { path: '', component: DummyComponent },
+  { path: 'dummy', component: DummyComponent },
   {
     path: '', component: NavbarComponent ,
     children:[

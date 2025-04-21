@@ -105,38 +105,55 @@ export class DietPlanComponent {
 
 
 
-
+  
   fetchImages() {
     this.dietPlanService.fetchImages().subscribe(
       (response) => {
-        if (!response?.data?.[0]?.response || !Array.isArray(response.data[0].response)) {
-          console.error('Unexpected API response format.');
-          return;
-        }
-
-        let filteredList = response.data[0].response;
+        console.log('API raw response:', response);
+  
+        const items = response ?? [];
+        console.log('Filtered items before filtering:', items);
+  
+        let filteredList = items;
+  
+        // Apply selected food type filter
         if (this.selectedFoodType) {
           filteredList = filteredList.filter((item: any) => {
-            const itemType = item.type ? item.type.toLowerCase() : '';
-            return (this.selectedFoodType === 'veg' && itemType.includes('vegetarian')) ||
-                   (this.selectedFoodType === 'nonveg' && itemType.includes('non vegetarian')) ||
-                   (this.selectedFoodType === 'cookies' && (itemType.includes('deserts') || itemType.includes('cookies')));
+            const itemType = item.type?.toLowerCase() || '';
+            return (
+              (this.selectedFoodType === 'veg' && itemType.includes('vegetarian')) ||
+              (this.selectedFoodType === 'nonveg' && itemType.includes('non vegetarian')) ||
+              (this.selectedFoodType === 'cookies' &&
+                (itemType.includes('deserts') || itemType.includes('cookies')))
+            );
           });
         }
-
+  
+        // Apply meal type filter
         if (this.selectedMeal) {
-          filteredList = filteredList.filter((item: any) => !item.meal_time || item.meal_time.toLowerCase().includes(this.selectedMeal!.toLowerCase()));
+          const selectedMealLower = this.selectedMeal.toLowerCase();
+          filteredList = filteredList.filter((item: any) => {
+            return !item.meal_time || item.meal_time.toLowerCase().includes(selectedMealLower);
+          });
         }
-
-        const imageList = filteredList.slice(0, 21).map((item: any) => ({
-          url: item.content_asset_url || 'assets/default-image.png',
-          name: item.name || 'No Name',
-          unit_of_measurement: item.unit_of_measurement || 'CUP',
-          quantity: item.quantity ?? 1
-        }));
-
+  
+        const imageList = filteredList.slice(0, 10).map((item: any) => {
+          console.log('Image URL raw:', item.content_Asset_Url); // ✅ Correct casing!
+  
+          return {
+            url: item.content_Asset_Url ?? 'assets/default-image.png',
+            name: item.name || 'Unnamed',
+            unit_of_measurement: item.unit_of_measurement || 'grams',
+            quantity: item.quantity ?? 1
+          };
+        });
+  
+        console.log('Mapped image list:', imageList);
+        console.log('Each item:', filteredList);
+  
         this.imageMatrix = this.chunkArray(imageList, 3);
-
+        console.log('Image matrix for display:', this.imageMatrix);
+  
         if (this.drawer) {
           if (this.imageMatrix.length > 0) {
             setTimeout(() => {
@@ -146,6 +163,8 @@ export class DietPlanComponent {
           } else {
             this.drawer.close();
           }
+        } else {
+          console.warn('Drawer not defined!');
         }
       },
       (error) => {
@@ -153,6 +172,9 @@ export class DietPlanComponent {
       }
     );
   }
+  
+  
+  
 
   saveDietPlan() {
     if (!this.Name || !this.Description) {
@@ -173,7 +195,7 @@ export class DietPlanComponent {
     const body = {
       name: this.Name,
       description: this.Description,
-      diet_plan: dietPlan
+      items: dietPlan // <-- change from diet_plan
     };
 
     if (this.editMode && this.editingPlanId) {
@@ -232,14 +254,14 @@ export class DietPlanComponent {
         
       },
       (error) => {
-        console.error('Error fetching saved diet plan:', error);
+        console.error('Error fetching saved diet plan:');
       }
     );
   }
 
   extractContentId(url: string): number {
-    const match = url.match(/(\d+)/); // Extract numbers from the URL
-    return match ? parseInt(match[0], 10) : 0;
+    const match = url.match(/\/(\d+)(?!.*\d)/); // Extract last number in the URL
+    return match ? parseInt(match[1], 10) : 0;
   }
 
   ngOnInit() {
@@ -327,7 +349,7 @@ editDietPlan(planId: string) {
   this.editMode = true;
   this.editingPlanId = planId;
   console.log("Fetching diet plan for ID:", planId);
-
+  
   this.dietPlanService.getRecipeById(planId).subscribe(
     (response) => {
       console.log("Full API Response:", response);
@@ -347,13 +369,13 @@ editDietPlan(planId: string) {
         const meal = item.meal_of_day.charAt(0).toUpperCase() + item.meal_of_day.slice(1);
         if (!this.selectedMealImages[meal]) this.selectedMealImages[meal] = [];
         this.selectedMealImages[meal].push({
-          url: `https://api.teknologiunggul.com/content/${item.content_id}`,
+          url: `http://localhost:5209/api/diet_plan/all${item.content_id}`,
           name: `Item ${item.content_id}`,
           unit_of_measurement: item.unit_of_measurement,
           quantity: item.quantity
         });
       });
-
+      this.updateSavedMealsList();
       this.cdr.detectChanges();
     },
     (error) => {
@@ -364,14 +386,6 @@ editDietPlan(planId: string) {
 }
 
 
-  
-
-
 
 
 }
-
-
-
-
-
